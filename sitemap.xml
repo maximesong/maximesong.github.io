@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/posts/my-first-post/</loc>
+    <loc>/posts/2020-01-30-mac-repeat-key-press/</loc>
     <lastmod>2020-01-30T14:39:01+08:00</lastmod>
   </url>
   
@@ -18,7 +18,63 @@
   </url>
   
   <url>
+    <loc>/posts/2018-12-22-golint/</loc>
+    <lastmod>2018-12-22T14:26:55+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2017-10-31-makefile-eval/</loc>
+    <lastmod>2017-10-30T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2017-10-05-anomaly-detection/</loc>
+    <lastmod>2017-10-05T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
+    <lastmod>2017-01-17T15:30:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/network/</loc>
+    <lastmod>2017-01-17T15:30:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2017-01-17-network-commands/</loc>
+    <lastmod>2017-01-17T15:30:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/bash/</loc>
+    <lastmod>2016-09-11T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2016-09-11-common-bash/</loc>
+    <lastmod>2016-09-11T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/go-martini/</loc>
+    <lastmod>2015-10-24T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2015-10-24-martini-inject/</loc>
+    <lastmod>2015-10-24T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/book/</loc>
+    <lastmod>2015-05-09T21:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/2015-05-09-soft-skills/</loc>
+    <lastmod>2015-05-09T21:00:00+00:00</lastmod>
   </url>
   
   <url>

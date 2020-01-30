@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Makefile动态增加target &middot; 记忆碎片</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1>记忆碎片</h1></a>
+      <p class="lead">
+       记录点滴 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">首页</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Makefile动态增加target</h1>
+  <time datetime=2017-10-30T21:00:00Z class="post-date">Mon, Oct 30, 2017</time>
+  <p>一些时候，Makefile里会有一些target有非常类似的rule。我们可以通过<code>foreach</code>，<code>define</code>，<code>eval</code>，<code>call</code>这些功能来避免重复。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-make" data-lang="make"><span style="color:#268bd2">countries</span> <span style="color:#719e07">=</span> china us uk japan hk
+
+define make_echo
+<span style="color:#268bd2">echo_$(1)</span><span style="color:#719e07">:</span>
+    <span style="color:#b58900">echo</span> <span style="color:#719e07">$(</span>1<span style="color:#719e07">)</span>
+endef
+
+<span style="color:#719e07">$(</span><span style="color:#268bd2">foreach</span> <span style="color:#268bd2">country</span>,<span style="color:#719e07">$</span><span style="color:#719e07">(</span><span style="color:#268bd2">countries</span><span style="color:#719e07">)</span>,<span style="color:#719e07">$</span><span style="color:#719e07">(</span><span style="color:#268bd2">eval</span> <span style="color:#719e07">$</span><span style="color:#719e07">(</span><span style="color:#268bd2">call</span> <span style="color:#268bd2">make_echo</span>,<span style="color:#719e07">$</span><span style="color:#719e07">(</span><span style="color:#268bd2">country</span><span style="color:#719e07">)</span><span style="color:#719e07">)</span><span style="color:#719e07">)</span><span style="color:#719e07">)</span>
+</code></pre></div><p><code>define</code>可以用来定义多行变量。<code>call</code>的第一个参数用<code>$1</code>表示。<code>eval</code>可以动态加载target的规则。</p>
+<p>参考文献
+<a href="http://www.gnu.org/software/make/manual/make.html#Eval-Function">GNU make manual</a></p>
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>

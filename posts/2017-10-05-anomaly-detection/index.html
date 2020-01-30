@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>时序数据的异常检测 &middot; 记忆碎片</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1>记忆碎片</h1></a>
+      <p class="lead">
+       记录点滴 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">首页</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>时序数据的异常检测</h1>
+  <time datetime=2017-10-05T21:00:00Z class="post-date">Thu, Oct 5, 2017</time>
+  <p>监控告警数据的异常检测是一项重要而繁琐的工作。最直观的做法是针对一项数据设置阈值。一旦当前监控数据超过阈值范围时，即需要发出告警。</p>
+<p>然而阈值的确定并不是一件容易做的事情。同时许多监控数据还有时间周期性。例如晚高峰的服务器访问量就会比平时高。如何对此类数据做告警是一项难题。</p>
+<p>经过一系列调研，发现Twitter已经做过并且开源了相关的工作<a href="https://github.com/twitter/AnomalyDetection">twitter/AnomalyDetection</a>
+相关的论文发表在<code>Vallis O, Hochenbaum J, Kerjariwal A. A novel technique for long-term anomaly detection in the cloud. Proceedings of the 6th USENIX conference on Hot Topics in Cloud Computing. 15-15, 2014</code></p>
+<p><a href="https://anomaly.io/blog">anomaly.io</a>的博客也有不少介绍。</p>
+<p><code>James Douglas Hamilton</code>的<code>Time Series Analysis</code>是经济学相关的经典书籍。</p>
+<p><code>Chandola, Varun, Arindam Banerjee, and Vipin Kumar. &quot;Anomaly detection: A survey.&quot; ACM computing surveys (CSUR) 41.3 (2009): 15.APA</code>这篇survey也是一个很好的参考。</p>
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>

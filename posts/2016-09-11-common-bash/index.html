@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>常用的bash脚本 &middot; 记忆碎片</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1>记忆碎片</h1></a>
+      <p class="lead">
+       记录点滴 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">首页</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>常用的bash脚本</h1>
+  <time datetime=2016-09-11T21:00:00Z class="post-date">Sun, Sep 11, 2016</time>
+  <p>这里记录一些常用的bash脚本。</p>
+<h1 id="获取脚本所在的目录">获取脚本所在的目录</h1>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#268bd2">DIR</span><span style="color:#719e07">=</span><span style="color:#2aa198">&#34;</span><span style="color:#719e07">$(</span> <span style="color:#b58900">cd</span> <span style="color:#2aa198">&#34;</span><span style="color:#719e07">$(</span> dirname <span style="color:#2aa198">&#34;</span><span style="color:#2aa198">${</span><span style="color:#268bd2">BASH_SOURCE</span>[0]<span style="color:#2aa198">}</span><span style="color:#2aa198">&#34;</span> <span style="color:#719e07">)</span><span style="color:#2aa198">&#34;</span> <span style="color:#719e07">&amp;&amp;</span> <span style="color:#b58900">pwd</span> <span style="color:#719e07">)</span><span style="color:#2aa198">&#34;</span>
+</code></pre></div><p><a href="http://stackoverflow.com/questions/59895/can-a-bash-script-tell-which-directory-it-is-stored-in">StackOverflow上有详尽的回答和解释</a></p>
+<h1 id="判断空字符串">判断空字符串</h1>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#719e07">if</span> <span style="color:#719e07">[</span><span style="color:#719e07">[</span> -z <span style="color:#268bd2">$GOPATH</span> <span style="color:#719e07">]</span><span style="color:#719e07">]</span>; <span style="color:#719e07">then</span> do_stuff; <span style="color:#719e07">fi</span>
+</code></pre></div>
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>

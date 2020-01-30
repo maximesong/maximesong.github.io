@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>go martini on 记忆碎片</title>
+    <link>/categories/go-martini/</link>
+    <description>Recent content in go martini on 记忆碎片</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 24 Oct 2015 21:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/go-martini/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>martini的依赖注入inject源码分析</title>
+      <link>/posts/2015-10-24-martini-inject/</link>
+      <pubDate>Sat, 24 Oct 2015 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2015-10-24-martini-inject/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/go-martini/martini&#34;&gt;martini&lt;/a&gt;是一个时下流行的go语言web框架。它的依赖注入部分用到了&lt;a href=&#34;https://github.com/codegangsta/inject&#34;&gt;inject&lt;/a&gt;。令人意外的是，inject只有区区不到200行的代码。下面我们来分析一下inject做了一些什么事情。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

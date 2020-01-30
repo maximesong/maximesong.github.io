@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>book on 记忆碎片</title>
+    <link>/categories/book/</link>
+    <description>Recent content in book on 记忆碎片</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 09 May 2015 21:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/book/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Soft Skills 读后感</title>
+      <link>/posts/2015-05-09-soft-skills/</link>
+      <pubDate>Sat, 09 May 2015 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2015-05-09-soft-skills/</guid>
+      <description>&lt;p&gt;前段时间读了&lt;a href=&#34;http://www.amazon.com/Soft-Skills-software-developers-manual/dp/1617292397&#34;&gt;Soft Skills: The software developer&amp;rsquo;s life manual&lt;/a&gt;这本书，书中讲到了和程序员有关的方方面面的事情，觉得写得不错，所以在这里分享一下。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

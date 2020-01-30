@@ -13,11 +13,75 @@
     
     <item>
       <title>Mac中长按输出重复字母</title>
-      <link>/posts/my-first-post/</link>
+      <link>/posts/2020-01-30-mac-repeat-key-press/</link>
       <pubDate>Thu, 30 Jan 2020 14:39:01 +0800</pubDate>
       
-      <guid>/posts/my-first-post/</guid>
+      <guid>/posts/2020-01-30-mac-repeat-key-press/</guid>
       <description>&lt;p&gt;Mac系统中长按一个字母默认会出现音标选项，这对于Vim的使用非常不友好。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>使用Golang Lint</title>
+      <link>/posts/2018-12-22-golint/</link>
+      <pubDate>Sat, 22 Dec 2018 14:26:55 +0800</pubDate>
+      
+      <guid>/posts/2018-12-22-golint/</guid>
+      <description>&lt;p&gt;Go语言本身有非常不错的静态检测工具，比如&lt;code&gt;golint&lt;/code&gt;，&lt;code&gt;govet&lt;/code&gt;。但是如果有特别多的额外检测工具需要使用，可能效率就会变低。可以使用工具达到这个目的&lt;a href=&#34;https://github.com/golangci/golangci-lint&#34;&gt;golangci-lint&lt;/a&gt;。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Makefile动态增加target</title>
+      <link>/posts/2017-10-31-makefile-eval/</link>
+      <pubDate>Mon, 30 Oct 2017 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2017-10-31-makefile-eval/</guid>
+      <description>&lt;p&gt;一些时候，Makefile里会有一些target有非常类似的rule。我们可以通过&lt;code&gt;foreach&lt;/code&gt;，&lt;code&gt;define&lt;/code&gt;，&lt;code&gt;eval&lt;/code&gt;，&lt;code&gt;call&lt;/code&gt;这些功能来避免重复。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>时序数据的异常检测</title>
+      <link>/posts/2017-10-05-anomaly-detection/</link>
+      <pubDate>Thu, 05 Oct 2017 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2017-10-05-anomaly-detection/</guid>
+      <description>&lt;p&gt;监控告警数据的异常检测是一项重要而繁琐的工作。最直观的做法是针对一项数据设置阈值。一旦当前监控数据超过阈值范围时，即需要发出告警。&lt;/p&gt;
+&lt;p&gt;然而阈值的确定并不是一件容易做的事情。同时许多监控数据还有时间周期性。例如晚高峰的服务器访问量就会比平时高。如何对此类数据做告警是一项难题。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>常用的网络命令</title>
+      <link>/posts/2017-01-17-network-commands/</link>
+      <pubDate>Tue, 17 Jan 2017 15:30:00 +0000</pubDate>
+      
+      <guid>/posts/2017-01-17-network-commands/</guid>
+      <description>&lt;p&gt;这里记录一些常用的网络命令&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>常用的bash脚本</title>
+      <link>/posts/2016-09-11-common-bash/</link>
+      <pubDate>Sun, 11 Sep 2016 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2016-09-11-common-bash/</guid>
+      <description>&lt;p&gt;这里记录一些常用的bash脚本。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>martini的依赖注入inject源码分析</title>
+      <link>/posts/2015-10-24-martini-inject/</link>
+      <pubDate>Sat, 24 Oct 2015 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2015-10-24-martini-inject/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/go-martini/martini&#34;&gt;martini&lt;/a&gt;是一个时下流行的go语言web框架。它的依赖注入部分用到了&lt;a href=&#34;https://github.com/codegangsta/inject&#34;&gt;inject&lt;/a&gt;。令人意外的是，inject只有区区不到200行的代码。下面我们来分析一下inject做了一些什么事情。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Soft Skills 读后感</title>
+      <link>/posts/2015-05-09-soft-skills/</link>
+      <pubDate>Sat, 09 May 2015 21:00:00 +0000</pubDate>
+      
+      <guid>/posts/2015-05-09-soft-skills/</guid>
+      <description>&lt;p&gt;前段时间读了&lt;a href=&#34;http://www.amazon.com/Soft-Skills-software-developers-manual/dp/1617292397&#34;&gt;Soft Skills: The software developer&amp;rsquo;s life manual&lt;/a&gt;这本书，书中讲到了和程序员有关的方方面面的事情，觉得写得不错，所以在这里分享一下。&lt;/p&gt;</description>
     </item>
     
   </channel>

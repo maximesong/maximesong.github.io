@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Categories &middot; 记忆碎片</title>
+  <title>Mac中长按输出重复字母 &middot; 记忆碎片</title>
   <meta name="description" content="" />
 
   
@@ -24,7 +24,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="/categories/index.xml" rel="alternate" type="application/rss+xml" title="记忆碎片" />
   
 </head>
 
@@ -50,17 +49,16 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-<li>
-    <span><a href="/categories/network/">network</a> <time class="pull-right post-list" datetime="2017-01-17T15:30:00Z">Tue, Jan 17, 2017</time></span>
-  </li><li>
-    <span><a href="/categories/bash/">bash</a> <time class="pull-right post-list" datetime="2016-09-11T21:00:00Z">Sun, Sep 11, 2016</time></span>
-  </li><li>
-    <span><a href="/categories/go-martini/">go martini</a> <time class="pull-right post-list" datetime="2015-10-24T21:00:00Z">Sat, Oct 24, 2015</time></span>
-  </li><li>
-    <span><a href="/categories/book/">book</a> <time class="pull-right post-list" datetime="2015-05-09T21:00:00Z">Sat, May 9, 2015</time></span>
-  </li>
-</ul>
+    <div class="post">
+  <h1>Mac中长按输出重复字母</h1>
+  <time datetime=2020-01-30T14:39:01&#43;0800 class="post-date">Thu, Jan 30, 2020</time>
+  <p>Mac系统中长按一个字母默认会出现音标选项，这对于Vim的使用非常不友好。</p>
+<p>解决方法是在终端中输入</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">defaults write -g ApplePressAndHoldEnabled -bool <span style="color:#b58900">false</span>
+</code></pre></div><p>重启相应的应用程序后生效。</p>
+</div>
+
+
     </main>
 
     

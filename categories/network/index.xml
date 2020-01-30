@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network on 记忆碎片</title>
+    <link>/categories/network/</link>
+    <description>Recent content in network on 记忆碎片</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Jan 2017 15:30:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/network/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>常用的网络命令</title>
+      <link>/posts/2017-01-17-network-commands/</link>
+      <pubDate>Tue, 17 Jan 2017 15:30:00 +0000</pubDate>
+      
+      <guid>/posts/2017-01-17-network-commands/</guid>
+      <description>&lt;p&gt;这里记录一些常用的网络命令&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

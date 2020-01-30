@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Categories &middot; 记忆碎片</title>
+  <title>使用Golang Lint &middot; 记忆碎片</title>
   <meta name="description" content="" />
 
   
@@ -24,7 +24,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="/categories/index.xml" rel="alternate" type="application/rss+xml" title="记忆碎片" />
   
 </head>
 
@@ -50,17 +49,20 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-<li>
-    <span><a href="/categories/network/">network</a> <time class="pull-right post-list" datetime="2017-01-17T15:30:00Z">Tue, Jan 17, 2017</time></span>
-  </li><li>
-    <span><a href="/categories/bash/">bash</a> <time class="pull-right post-list" datetime="2016-09-11T21:00:00Z">Sun, Sep 11, 2016</time></span>
-  </li><li>
-    <span><a href="/categories/go-martini/">go martini</a> <time class="pull-right post-list" datetime="2015-10-24T21:00:00Z">Sat, Oct 24, 2015</time></span>
-  </li><li>
-    <span><a href="/categories/book/">book</a> <time class="pull-right post-list" datetime="2015-05-09T21:00:00Z">Sat, May 9, 2015</time></span>
-  </li>
-</ul>
+    <div class="post">
+  <h1>使用Golang Lint</h1>
+  <time datetime=2018-12-22T14:26:55&#43;0800 class="post-date">Sat, Dec 22, 2018</time>
+  <p>Go语言本身有非常不错的静态检测工具，比如<code>golint</code>，<code>govet</code>。但是如果有特别多的额外检测工具需要使用，可能效率就会变低。可以使用工具达到这个目的<a href="https://github.com/golangci/golangci-lint">golangci-lint</a>。</p>
+<p>最简单的方式是以默认方式运行:</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">golangci-lint run
+</code></pre></div><p>有时可能希望对一些包做过滤，可以考虑使用命令</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go list ./... | golangci-lint run
+</code></pre></div><p>如果希望忽略测试，可以加上<code>--tests=false</code></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">go list ./... | golangci-lint run --tests<span style="color:#719e07">=</span><span style="color:#b58900">false</span>
+</code></pre></div>
+</div>
+
+
     </main>
 
     

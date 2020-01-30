@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.2" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>martini的依赖注入inject源码分析 &middot; 记忆碎片</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class=" ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="/"><h1>记忆碎片</h1></a>
+      <p class="lead">
+       记录点滴 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="/">首页</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>martini的依赖注入inject源码分析</h1>
+  <time datetime=2015-10-24T21:00:00Z class="post-date">Sat, Oct 24, 2015</time>
+  <p><a href="https://github.com/go-martini/martini">martini</a>是一个时下流行的go语言web框架。它的依赖注入部分用到了<a href="https://github.com/codegangsta/inject">inject</a>。令人意外的是，inject只有区区不到200行的代码。下面我们来分析一下inject做了一些什么事情。</p>
+<p>inject中的关键类型是<code>Injector</code></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">type</span> Injector <span style="color:#268bd2">interface</span> {
+	Applicator
+	Invoker
+	TypeMapper
+	<span style="color:#586e75">// SetParent sets the parent of the injector. If the injector cannot find a
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// dependency in its Type map it will check its parent before returning an
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// error.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">SetParent</span>(Injector)
+}
+</code></pre></div><p>它包含了三个子接口<code>Applicator</code>， <code>Invoker</code>， <code>TypeMapper</code>和一个函数。</p>
+<p><code>Applicator</code>需要实现一个<code>Apply</code>函数。它的作用是把值注入到struct里。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Applicator represents an interface for mapping dependencies to a struct.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">type</span> Applicator <span style="color:#268bd2">interface</span> {
+	<span style="color:#586e75">// Maps dependencies in the Type map to each field in the struct
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// that is tagged with &#39;inject&#39;. Returns an error if the injection
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// fails.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">Apply</span>(<span style="color:#268bd2">interface</span>{}) <span style="color:#dc322f">error</span>
+}
+</code></pre></div><p><code>Invoker</code>需要实现一个<code>Invoke</code>方法，这个方法的作用是在通过反射调用函数的同时，将参数注入。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Invoker represents an interface for calling functions via reflection.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">type</span> Invoker <span style="color:#268bd2">interface</span> {
+	<span style="color:#586e75">// Invoke attempts to call the interface{} provided as a function,
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// providing dependencies for function arguments based on Type. Returns
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// a slice of reflect.Value representing the returned values of the function.
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// Returns an error if the injection fails.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">Invoke</span>(<span style="color:#268bd2">interface</span>{}) ([]reflect.Value, <span style="color:#dc322f">error</span>)
+}
+</code></pre></div><p><code>TypeMapper</code>接口决定了从类型(<code>reflect.Type</code>)映射到值(<code>reflect.Value</code>)的对应关系</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// TypeMapper represents an interface for mapping interface{} values based on type.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">type</span> TypeMapper <span style="color:#268bd2">interface</span> {
+	<span style="color:#586e75">// Maps the interface{} value based on its immediate type from reflect.TypeOf.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">Map</span>(<span style="color:#268bd2">interface</span>{}) TypeMapper
+	<span style="color:#586e75">// Maps the interface{} value based on the pointer of an Interface provided.
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// This is really only useful for mapping a value as an interface, as interfaces
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// cannot at this time be referenced directly without a pointer.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">MapTo</span>(<span style="color:#268bd2">interface</span>{}, <span style="color:#268bd2">interface</span>{}) TypeMapper
+	<span style="color:#586e75">// Provides a possibility to directly insert a mapping based on type and value.
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// This makes it possible to directly map type arguments not possible to instantiate
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// with reflect like unidirectional channels.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">Set</span>(reflect.Type, reflect.Value) TypeMapper
+	<span style="color:#586e75">// Returns the Value that is mapped to the current type. Returns a zeroed Value if
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// the Type has not been mapped.
+</span><span style="color:#586e75"></span>	<span style="color:#268bd2">Get</span>(reflect.Type) reflect.Value
+}
+</code></pre></div><p>下面我们来看<code>Injector</code>接口的具体实现<code>injector</code></p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">type</span> injector <span style="color:#268bd2">struct</span> {
+	values <span style="color:#268bd2">map</span>[reflect.Type]reflect.Value
+	parent Injector
+}
+</code></pre></div><p><code>injector</code>通过一个<code>map</code>来保存反射类型和反射值的对应关系。</p>
+<p>我们可以用<code>New()</code>方法得到一个用空的<code>map</code>初始化了的<code>Injector</code>。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// New returns a new Injector.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> <span style="color:#268bd2">New</span>() Injector {
+	<span style="color:#719e07">return</span> <span style="color:#719e07">&amp;</span>injector{
+		values: <span style="color:#b58900">make</span>(<span style="color:#268bd2">map</span>[reflect.Type]reflect.Value),
+	}
+}
+</code></pre></div><p><code>injector</code>还有一个<code>parent</code>变量来指定父级<code>Injector</code>构成层级关系。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">func</span> (i <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">SetParent</span>(parent Injector) {
+	i.parent = parent
+}
+</code></pre></div><p><code>Invoke</code>方法传入的是需要被注入与调用的函数。它首先对函数<code>f</code>调用<code>reflect.TypeOf</code>获得它的反射类型。
+接着通过一个循环，遍历函数反射类型的各个输入参数，并通过调用injector上<code>TypeMapper</code>的<code>Get</code>方法获取每个参数类型对应需要注入的值(<code>reflect.Value</code>)。</p>
+<p>每个获取的<code>val</code>会通过调用<code>IsValid</code>检查。如果<code>val</code>是一个零值，那么<code>IsValid</code>会返回<code>false</code>，整个函数会返回错误。</p>
+<p>如果所有参数都获取成功，那么函数的最后会对<code>f</code>的反射值调用<code>Call</code>方法，并且返回函数返回值的反射值类型。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Invoke attempts to call the interface{} provided as a function,
+</span><span style="color:#586e75"></span><span style="color:#586e75">// providing dependencies for function arguments based on Type.
+</span><span style="color:#586e75"></span><span style="color:#586e75">// Returns a slice of reflect.Value representing the returned values of the function.
+</span><span style="color:#586e75"></span><span style="color:#586e75">// Returns an error if the injection fails.
+</span><span style="color:#586e75"></span><span style="color:#586e75">// It panics if f is not a function
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> (inj <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">Invoke</span>(f <span style="color:#268bd2">interface</span>{}) ([]reflect.Value, <span style="color:#dc322f">error</span>) {
+	t <span style="color:#719e07">:=</span> reflect.<span style="color:#268bd2">TypeOf</span>(f)
+
+	<span style="color:#268bd2">var</span> in = <span style="color:#b58900">make</span>([]reflect.Value, t.<span style="color:#268bd2">NumIn</span>()) <span style="color:#586e75">//Panic if t is not kind of Func
+</span><span style="color:#586e75"></span>	<span style="color:#719e07">for</span> i <span style="color:#719e07">:=</span> <span style="color:#2aa198">0</span>; i &lt; t.<span style="color:#268bd2">NumIn</span>(); i<span style="color:#719e07">++</span> {
+		argType <span style="color:#719e07">:=</span> t.<span style="color:#268bd2">In</span>(i)
+		val <span style="color:#719e07">:=</span> inj.<span style="color:#268bd2">Get</span>(argType)
+		<span style="color:#719e07">if</span> !val.<span style="color:#268bd2">IsValid</span>() {
+			<span style="color:#719e07">return</span> <span style="color:#cb4b16">nil</span>, fmt.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;Value not found for type %v&#34;</span>, argType)
+		}
+
+		in[i] = val
+	}
+
+	<span style="color:#719e07">return</span> reflect.<span style="color:#268bd2">ValueOf</span>(f).<span style="color:#268bd2">Call</span>(in), <span style="color:#cb4b16">nil</span>
+}
+</code></pre></div><p>相类似的，注入到<code>struct</code>是遍历它每一个标注了<code>inject</code>的field，找到改类型对应的值来完成注入的。这里就不再赘述了。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Maps dependencies in the Type map to each field in the struct
+</span><span style="color:#586e75"></span><span style="color:#586e75">// that is tagged with &#39;inject&#39;.
+</span><span style="color:#586e75"></span><span style="color:#586e75">// Returns an error if the injection fails.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> (inj <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">Apply</span>(val <span style="color:#268bd2">interface</span>{}) <span style="color:#dc322f">error</span> {
+	v <span style="color:#719e07">:=</span> reflect.<span style="color:#268bd2">ValueOf</span>(val)
+
+	<span style="color:#719e07">for</span> v.<span style="color:#268bd2">Kind</span>() <span style="color:#719e07">==</span> reflect.Ptr {
+		v = v.<span style="color:#268bd2">Elem</span>()
+	}
+
+	<span style="color:#719e07">if</span> v.<span style="color:#268bd2">Kind</span>() <span style="color:#719e07">!=</span> reflect.Struct {
+		<span style="color:#719e07">return</span> <span style="color:#cb4b16">nil</span> <span style="color:#586e75">// Should not panic here ?
+</span><span style="color:#586e75"></span>	}
+
+	t <span style="color:#719e07">:=</span> v.<span style="color:#268bd2">Type</span>()
+
+	<span style="color:#719e07">for</span> i <span style="color:#719e07">:=</span> <span style="color:#2aa198">0</span>; i &lt; v.<span style="color:#268bd2">NumField</span>(); i<span style="color:#719e07">++</span> {
+		f <span style="color:#719e07">:=</span> v.<span style="color:#268bd2">Field</span>(i)
+		structField <span style="color:#719e07">:=</span> t.<span style="color:#268bd2">Field</span>(i)
+		<span style="color:#719e07">if</span> f.<span style="color:#268bd2">CanSet</span>() <span style="color:#719e07">&amp;&amp;</span> (structField.Tag <span style="color:#719e07">==</span> <span style="color:#2aa198">&#34;inject&#34;</span> <span style="color:#719e07">||</span> structField.Tag.<span style="color:#268bd2">Get</span>(<span style="color:#2aa198">&#34;inject&#34;</span>) <span style="color:#719e07">!=</span> <span style="color:#2aa198">&#34;&#34;</span>) {
+			ft <span style="color:#719e07">:=</span> f.<span style="color:#268bd2">Type</span>()
+			v <span style="color:#719e07">:=</span> inj.<span style="color:#268bd2">Get</span>(ft)
+			<span style="color:#719e07">if</span> !v.<span style="color:#268bd2">IsValid</span>() {
+				<span style="color:#719e07">return</span> fmt.<span style="color:#268bd2">Errorf</span>(<span style="color:#2aa198">&#34;Value not found for type %v&#34;</span>, ft)
+			}
+
+			f.<span style="color:#268bd2">Set</span>(v)
+		}
+
+	}
+
+	<span style="color:#719e07">return</span> <span style="color:#cb4b16">nil</span>
+}
+</code></pre></div><p><code>Map</code>方法的实现就是将一个具体值<code>val</code>的反射类型映射到反射值上。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Maps the concrete value of val to its dynamic type using reflect.TypeOf,
+</span><span style="color:#586e75"></span><span style="color:#586e75">// It returns the TypeMapper registered in.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> (i <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">Map</span>(val <span style="color:#268bd2">interface</span>{}) TypeMapper {
+	i.values[reflect.<span style="color:#268bd2">TypeOf</span>(val)] = reflect.<span style="color:#268bd2">ValueOf</span>(val)
+	<span style="color:#719e07">return</span> i
+}
+</code></pre></div><p><code>MapTo</code>则会指定将哪个interface的 <code>ifacePtr</code>反射类型映射到<code>val</code>的反射值上。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">func</span> (i <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">MapTo</span>(val <span style="color:#268bd2">interface</span>{}, ifacePtr <span style="color:#268bd2">interface</span>{}) TypeMapper {
+	i.values[<span style="color:#268bd2">InterfaceOf</span>(ifacePtr)] = reflect.<span style="color:#268bd2">ValueOf</span>(val)
+	<span style="color:#719e07">return</span> i
+}
+</code></pre></div><p><code>InterfaceOf</code>的实现就是找到指针最终指向的interface, 然后返回。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// InterfaceOf dereferences a pointer to an Interface type.
+</span><span style="color:#586e75"></span><span style="color:#586e75">// It panics if value is not an pointer to an interface.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> <span style="color:#268bd2">InterfaceOf</span>(value <span style="color:#268bd2">interface</span>{}) reflect.Type {
+	t <span style="color:#719e07">:=</span> reflect.<span style="color:#268bd2">TypeOf</span>(value)
+
+	<span style="color:#719e07">for</span> t.<span style="color:#268bd2">Kind</span>() <span style="color:#719e07">==</span> reflect.Ptr {
+		t = t.<span style="color:#268bd2">Elem</span>()
+	}
+
+	<span style="color:#719e07">if</span> t.<span style="color:#268bd2">Kind</span>() <span style="color:#719e07">!=</span> reflect.Interface {
+		<span style="color:#b58900">panic</span>(<span style="color:#2aa198">&#34;Called inject.InterfaceOf with a value that is not a pointer to an interface. (*MyInterface)(nil)&#34;</span>)
+	}
+
+	<span style="color:#719e07">return</span> t
+}
+</code></pre></div><p><code>Set</code>方法直接设置映射关系。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#586e75">// Maps the given reflect.Type to the given reflect.Value and returns
+</span><span style="color:#586e75"></span><span style="color:#586e75">// the Typemapper the mapping has been registered in.
+</span><span style="color:#586e75"></span><span style="color:#268bd2">func</span> (i <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">Set</span>(typ reflect.Type, val reflect.Value) TypeMapper {
+	i.values[typ] = val
+	<span style="color:#719e07">return</span> i
+}
+</code></pre></div><p><code>Get</code>方法首先直接寻找反射类型<code>t</code>的对应反射值。如果没有，而且<code>t</code>是一个接口类型，则再看映射关系中有没有类型是实现这个接口的，得到它的反射值。
+如果还没有，再到父级Injector中去寻找。</p>
+<div class="highlight"><pre style="color:#93a1a1;background-color:#002b36;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#268bd2">func</span> (i <span style="color:#719e07">*</span>injector) <span style="color:#268bd2">Get</span>(t reflect.Type) reflect.Value {
+	val <span style="color:#719e07">:=</span> i.values[t]
+
+	<span style="color:#719e07">if</span> val.<span style="color:#268bd2">IsValid</span>() {
+		<span style="color:#719e07">return</span> val
+	}
+
+	<span style="color:#586e75">// no concrete types found, try to find implementors
+</span><span style="color:#586e75"></span>	<span style="color:#586e75">// if t is an interface
+</span><span style="color:#586e75"></span>	<span style="color:#719e07">if</span> t.<span style="color:#268bd2">Kind</span>() <span style="color:#719e07">==</span> reflect.Interface {
+		<span style="color:#719e07">for</span> k, v <span style="color:#719e07">:=</span> <span style="color:#719e07">range</span> i.values {
+			<span style="color:#719e07">if</span> k.<span style="color:#268bd2">Implements</span>(t) {
+				val = v
+				<span style="color:#719e07">break</span>
+			}
+		}
+	}
+
+	<span style="color:#586e75">// Still no type found, try to look it up on the parent
+</span><span style="color:#586e75"></span>	<span style="color:#719e07">if</span> !val.<span style="color:#268bd2">IsValid</span>() <span style="color:#719e07">&amp;&amp;</span> i.parent <span style="color:#719e07">!=</span> <span style="color:#cb4b16">nil</span> {
+		val = i.parent.<span style="color:#268bd2">Get</span>(t)
+	}
+
+	<span style="color:#719e07">return</span> val
+
+}
+</code></pre></div><p>这样，通过分析inject的源代码，我们就对martini中的依赖注入有了一定的了解。</p>
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>
